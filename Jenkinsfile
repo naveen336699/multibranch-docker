@@ -2,32 +2,35 @@ pipeline {
     agent any
 
     stages {
+
         stage('Build') {
             steps {
                 sh 'docker build -t image1 .'
             }
         }
-        stage ("Tag") {
+
+        stage("Tag") {
             steps {
                 sh 'docker tag image1 naveenb2575/paytm:bank'
             }
         }
-       stage('push') {
+
+        stage('Push') {
             steps {
-                script{
-                withDockerRegistry(credentialsId: 'dockerhub') {
-                  sh 'docker push naveenb2575/paytm:bank'
-                   }
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh 'docker push naveenb2575/paytm:bank'
+                    }
                 }
             }
         }
-            }
-        }
-        
-        stage ("Deploy") {
+
+        stage("Deploy") {
             steps {
                 sh 'docker run -itd --name bank-app -p 1111:80 naveenb2575/paytm:bank'
             }
         }
+
     }
 }
+
